@@ -23,23 +23,20 @@ function banner
     echo "                                    🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥";
 }
 
-function check_norminette {
+function check_norminette { 
     output=$(norminette)
     if echo "$output" | grep -Pq 'Error!'; then
         echo "$output" | awk -v RS= '/Error!/' | sed -n '/Error!/,/: OK!/p' | grep -v ': OK!'
-        Print "Norminette: Error!"
+        echo "HAHA U FAILED NORMINETTE 😈😈😈 ${RED} NORM FLAG ${NC} read NORM next time!"
     else
         echo -e "Norminette: ${GREEN} OK!${NC}"
     fi
 }
 
-#q: how to check if there is output after find command
-#a: https://stackoverflow.com/questions/1521462/looping-through-the-output-of-find
-
 function check_marvin {
     output=$(find . -type f -exec awk 'FNR==6{print FILENAME ":" $0}' {} \; | grep "<marvin@42.fr>")
     if [ -z "$output" ]; then
-        echo -e "Hm ${GREEN}no Marvin's email address ${NC} "
+        echo -e "Hm ${GREEN}no Marvin's email address ${NC}"
     else
         echo -e "Hahaha u forgot to delete marvin's email address 😈😈😈 ${RED} NORM FLAG ${NC} read NORM next time!"
         echo "$output"
@@ -48,8 +45,7 @@ function check_marvin {
 
 function check_authors() {
     local num=$1  # First argument to the function
-    local output=$(grep --exclude=*.sh -roP '(?<=By: )\b\S+\b|(?<=Created: )[0-9/ :]+by \b\S+\b|(?<=Updated: )[0-9/ :]+by \b\S+\b' . | awk -F' ' '{print $NF}' | awk -F':' '{print $NF}' | sort -u
-)
+    local output=$(grep --exclude=*.sh -roP '(?<=By: )\b\S+\b|(?<=Created: )[0-9/ :]+by \b\S+\b|(?<=Updated: )[0-9/ :]+by \b\S+\b' . | awk -F' ' '{print $NF}' | awk -F':' '{print $NF}' | sort -u)
 
     echo "AUTORS:"
     echo "$output"
@@ -71,6 +67,69 @@ function check_authors() {
     fi
 }
 
+function check_file()
+{
+    if [ -e libftprintf.a ] || [ -e libft.a ]; then
+        echo "file exists, thats good, now lets check if it works 😈😈😈"
+    else
+        echo -e "LOL u didnt even read the mandotory part of the subject ${RED} ERROR COMPILATION FLAG  💀😈💀 ${RED}hahahahahaha${NC}"
+    fi
+}
+
+check_makefile()
+{
+    if [ -e Makefile ]; then
+        echo -e "${GREEN}Makefile exists${NC}, thats good, now lets check if u have all right"
+        Makefile=$(cat Makefile)
+
+        requirement1=$(echo "$Makefile" | grep -Pq 'CC = cc'; echo $?)
+        requirement2=$(echo "$Makefile" | grep -Pq 'CFLAGS = -Wall -Wextra -Werror'; echo $?)
+        requirement3=$(echo "$Makefile" | grep -Pq 'NAME = '; echo $?)
+        requirement4=$(echo "$Makefile" | grep -Pq 'all: '; echo $?)
+        requirement5=$(echo "$Makefile" | grep -Pq 'clean: '; echo $?)
+        requirement6=$(echo "$Makefile" | grep -Pq 'fclean: '; echo $?)
+        requirement7=$(echo "$Makefile" | grep -Pq 're:'; echo $?)
+
+        if [ $requirement1 -eq 0 ] && [ $requirement2 -eq 0 ] && [ $requirement3 -eq 0 ] && \
+           [ $requirement4 -eq 0 ] && [ $requirement5 -eq 0 ] && [ $requirement3 -eq 0 ]; then
+            echo "Hm  nothing to see here, everything is fine 😈😈😈"
+        else
+            echo -e "${RED}HAHAHA${NC}  YOU DO NOT HAVE ALL REQUIREMENTS IN THE MAKEFILE 😈😈😈 ${RED} NORM FLAG ${NC} read MAKEFILE next time!"
+            if [ $requirement1 -ne 0 ]; then
+                echo "Requirement 1: 'CC = cc'"
+            fi
+
+            if [ $requirement2 -ne 0 ]; then
+                echo "Requirement 2: 'CFLAGS = -Wall -Wextra -Werror'"
+                echo "This is the default flags, if u have something else, just add it to the end of the line"
+                echo -e "${RED}Example${NC}: CFLAGS = -Wall -Wextra -Werror -g -lx11 -lbsd"
+                echo -e "If u evaluting with this script, u can just ignore this message"
+            fi
+
+            if [ $requirement3 -ne 0 ]; then
+                echo "Requirement 3: 'NAME = '"
+            fi
+            if [ $requirement4 -ne 0 ]; then
+                echo "Requirement 4: 'all:'"
+            fi
+
+            if [ $requirement5 -ne 0 ]; then
+                echo "Requirement 5: 'clean:'"
+            fi
+
+            if [ $requirement6 -ne 0 ]; then
+                echo "Requirement 6: 'fclean:'"
+            fi
+
+            if [ $requirement7 -ne 0 ]; then
+                echo "Requirement 7: 're:'"
+            fi
+            read -p "Press enter to continue or ctrl + c to exit"
+        fi
+    else
+        echo -e "LOL u didnt even read the mandotory part of the subject ${RED} ERROR COMPILATION FLAG  💀😈💀 ${RED}hahahahahaha${NC}"
+    fi
+}
 
 function main {
     banner
@@ -86,14 +145,18 @@ function main {
     case $num in
         1)
             cd libft;
+            check_makefile;
+            make re;
+            check_file;
             check_norminette;
-            francinette --strict;
             check_authors $num ;
             check_marvin;;
         2)
             cd ft_printf;
+            check_makefile;
+            make re;
+            check_file;
             check_norminette;
-            francinette --strict;
             check_authors $num ;;
         3)
             check_norminette;
@@ -102,6 +165,7 @@ function main {
             echo "there will be also more tests";;
         4)
             cd push_swap;
+            check_makefile;
             make re;
             curl https://raw.githubusercontent.com/hu8813/tester_push_swap/main/pstester.py | python3 -
             read -p "Press enter to continue or ctrl + c to exit"
@@ -113,12 +177,15 @@ function main {
             echo "there will be also more tests 💀💀💀";;
         5)
             cd philo;
+            check_makefile;
+            make re;
             check_authors $num;
             check_norminette;
             check_marvin;
             echo "there will be also more tests 💀💀💀";;
         6)
             cd minishell;
+            check_makefile;
             make re;
             git clone https://github.com/LucasKuhn/minishell_tester.git
             cd minishell_tester;
