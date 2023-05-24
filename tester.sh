@@ -27,7 +27,7 @@ function check_norminette {
     output=$(norminette)
     if echo "$output" | grep -Pq 'Error!'; then
         echo "$output" | awk -v RS= '/Error!/' | sed -n '/Error!/,/: OK!/p' | grep -v ': OK!'
-        echo "HAHA U FAILED NORMINETTE 😈😈😈 ${RED} NORM FLAG ${NC} read NORM next time!"
+        echo -e "HAHA U FAILED NORMINETTE 😈😈😈 ${RED} NORM FLAG ${NC} read NORM next time!"
     else
         echo -e "Norminette: ${GREEN} OK!${NC}"
     fi
@@ -106,7 +106,7 @@ check_makefile()
            [ $requirement4 -eq 0 ] && [ $requirement5 -eq 0 ] && [ $requirement3 -eq 0 ]; then
             echo "Hm  nothing to see here, everything is fine 😈😈😈"
         else
-            echo -e "${RED}HAHAHA${NC}  YOU DO NOT HAVE ALL REQUIREMENTS IN THE MAKEFILE 😈😈😈 ${RED} NORM FLAG ${NC} read MAKEFILE next time!"
+            echo -e "${RED}HAHAHA${NC}  YOU DO NOT HAVE ALL REQUIREMENTS IN THE MAKEFILE 😈😈😈 ${RED} NORM FLAG ${NC} read NORM next time!"
             if [ $requirement1 -ne 0 ]; then
                 echo "Requirement 1: 'CC = cc'"
             fi
