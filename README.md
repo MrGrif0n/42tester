@@ -13,6 +13,7 @@ cd to tester
 * To [rpinchas](https://github.com/RubenPin90) for another [push_swap_tester](https://github.com/RubenPin90/rubinette-push_swap_tester-)
 
 Contacts:
+* Discord:
 ```
-Discord: Mr.Grifon#1373
+Mr.Grifon#1373
 ```
