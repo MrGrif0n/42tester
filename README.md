@@ -12,4 +12,5 @@ cd to tester
 * To [huaydin](https://github.com/hu8813) for [push_swap_tester](https://github.com/hu8813/push_swap)
 * To [rpinchas](https://github.com/RubenPin90) for another [push_swap_tester](https://github.com/RubenPin90/rubinette-push_swap_tester-)
 
-Contacts: Mr.Grifon#1373
+Contacts: 
+Discord: Mr.Grifon#1373
