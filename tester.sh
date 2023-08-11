@@ -239,6 +239,9 @@ function check_functions() {
             EXEC_NAME="philo"
             ALLOWED=("read" "write" "malloc" "free" "exit" "gettimeofday" "printf" "memset" "usleep" "pthread_create" "pthread_detach" "pthread_join" "pthread_mutex_init" "pthread_mutex_destroy" "pthread_mutex_lock" "pthread_mutex_unlock")
             ;;
+        6)
+            EXEC_NAME="minishell"
+            ALLOWED=("readline" "rl_clear_history" "rl_on_new_line" "rl_replace_line" "rl_redisplay" "add_history" "printf" "malloc" "free" "write" "access" "open" "read" "close" "fork" "wait" "waitpid" "wait3" "wait4" "signal" "sigaction" "sigemptyset" "sigaddset" "kill" "exit" "getcwd" "chdir" "stat" "lstat" "fstat" "unlink" "execve" "dup" "dup2" "pipe" "opendir" "readdir" "closedir" "strerror" "perror" "isatty" "ttyname" "ttyslot" "ioctl" "getenv" "tcsetattr" "tcgetattr" "tgetent" "tgetflag" "tgetnum" "tgetstr" "tgoto" "tputs")
     esac
     
     RESULTS=$(nm -u $EXEC_NAME | awk '{print $2}' | sed 's/@.*$//') 
