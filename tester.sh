@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m'
@@ -88,6 +89,7 @@ function check_file()
     fi
 }
 
+
 check_makefile()
 {
     if [ -e Makefile ]; then
@@ -104,7 +106,7 @@ check_makefile()
 
         if [ $requirement1 -eq 0 ] && [ $requirement2 -eq 0 ] && [ $requirement3 -eq 0 ] && \
            [ $requirement4 -eq 0 ] && [ $requirement5 -eq 0 ] && [ $requirement3 -eq 0 ]; then
-            echo "Hm  nothing to see here, everything is fine 😈😈😈"
+            echo -e "Hm  nothing to see here, ${GREEN}everything is fine${NC} 😈😈😈"
         else
             echo -e "${RED}HAHAHA${NC}  YOU DO NOT HAVE ALL REQUIREMENTS IN THE MAKEFILE 😈😈😈 ${RED} NORM FLAG ${NC} read NORM next time!"
             if [ $requirement1 -ne 0 ]; then
@@ -142,6 +144,23 @@ check_makefile()
         echo -e "LOL u didnt even read the mandotory part of the subject ${RED} ERROR COMPILATION FLAG  💀😈💀 ${RED}hahahahahaha${NC}"
     fi
 }
+
+
+function check_steps_amount()
+{
+    count=$1
+    min=-10000
+    max=10000
+
+    all_numbers=($(seq $min $max))
+    
+    shuffled_numbers=($(echo ${all_numbers[@]} | tr ' ' '\n' | shuf))
+    
+    unique_numbers=(${shuffled_numbers[@]:0:$count})
+    
+    ./push_swap "${unique_numbers[@]}" | wc -l
+}
+
 
 function main {
     banner
@@ -184,16 +203,75 @@ function main {
             check_authors $num ;
             echo "there will be also more tests";;
         4)
-            cd push_swap;
+            cd push_swap >/dev/null 2>&1 || { echo -e "${RED}I can't fail u if there is no  \"push_swap\" folder into project's folder ${NC}"; exit 1; }
             make re;
             curl https://raw.githubusercontent.com/hu8813/tester_push_swap/main/pstester.py | python3 -
             read -p "Press enter to continue or ctrl + c to exit"
             bash -c "$(curl -fsSL https://raw.githubusercontent.com/RubenPin90/push_swap_tester/master/tester.sh)" 
-            make fclean;
             check_makefile;
             check_norminette;
             check_authors $num;
             check_marvin;
+            read -p "Did u pass all tests? (y/n)" answer
+            if [ "$answer" != "${answer#[Yy]}" ] ;then
+                read -p "ok, lets check how fast ur program is with 100 numbers (press enter to continue)"
+                steps=$(check_steps_amount 100)
+                echo -e "steps: $steps\n"
+                if [ $steps -lt 700 ]; then
+                    echo -e "5 points\n"
+                    i=5;
+                elif [ $steps -lt 900 ]; then
+                    echo -e "4 points\n"
+                    i=4;
+                elif [ $steps -lt 1100 ]; then
+                    i=3;
+                    echo -e "3 points\n"
+                elif [ $steps -lt 1300 ]; then
+                    i=2;
+                    echo -e "2 points\n"
+                elif [ $steps -lt 1500 ]; then
+                    echo -e "1 point\n"
+                    i=1;
+                else
+                    echo "hahah 0 points 😈😈😈, u are too slow" 
+                    i=0;
+                fi
+                read -p "ok, lets check how fast ur program is with 500 numbers (press enter to continue)"
+                steps2=$(check_steps_amount 500)
+                echo -e "steps: $steps2\n"
+                if [ $steps2 -lt 5500 ]; then
+                    echo -e "5 points"
+                    j=5;
+                elif [ $steps2 -lt 7000 ]; then
+                    echo -e "4 points"
+                    j=4;
+                elif [ $steps2 -lt 8500 ]; then
+                    echo -e "3 points"
+                    j=3;
+                elif [ $steps2 -lt 10000 ]; then
+                    echo -e "2 points"
+                    j=2;
+                elif [ $steps2 -lt 11500 ]; then
+                    echo -e "1 point"
+                    j=1;                
+                else
+                    j=0;
+                    echo "hahaha 0 points 😈😈😈, u are too slow\n"
+                fi
+                total=$((i + j))
+                if [ $total -lt 6 ]; then
+                    echo -e "${RED}hahaha 😈😈😈, u are too slow\n${NC}"
+                elif [ $total -lt 10 ]; then
+                    echo -e "${GREEN}ok, u passed all tests${NC}, but could u do it better? 😈😈😈\n${NC}"
+                else
+                    echo -e "${GREEN}ok, u passed all tests, and u are fast 😈😈😈\n${NC}"
+                fi
+            else
+                echo "hahah try again 😈😈😈 maybe it will help you"
+            fi
+            echo "making everything clean"
+            rm -f testfile;
+            make fclean >dev/null 2>&1;
             echo "there will be also more tests 💀💀💀";;
         5)
             cd philo;
