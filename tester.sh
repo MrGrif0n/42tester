@@ -337,6 +337,7 @@ function main {
             check_authors $num;
             check_norminette;
             check_marvin;
+            check_functions $num;
             echo "there will be also more tests 💀💀💀";;
         *)
             echo -e "ah, u want to fail a ${YELLOW}project${NC}, but u ${RED}failed${NC} to type the right number 😈😈😈 ${RED}hahahahahaha${NC}"
