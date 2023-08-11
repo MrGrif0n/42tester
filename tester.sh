@@ -10,8 +10,7 @@ DEEPBLUE='\033[0;36m'
 BLACK='\033[0;30m'
 PURPLE='\033[0;35m'
 
-function banner
-{
+function banner {
     clear;
     echo "                                    🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥";
     echo "                                    🔥                                                                                                  🔥";
@@ -68,8 +67,7 @@ function check_authors() {
     fi
 }
 
-function check_file()
-{
+function check_file() {
     local num=$1
     local filename
 
@@ -90,8 +88,7 @@ function check_file()
 }
 
 
-check_makefile()
-{
+check_makefile() {
     if [ -e Makefile ]; then
         echo -e "${GREEN}Makefile exists${NC}, thats good, now lets check if u have all right"
         Makefile=$(cat Makefile)
@@ -115,9 +112,9 @@ check_makefile()
 
             if [ $requirement2 -ne 0 ]; then
                 echo "Requirement 2: 'CFLAGS = -Wall -Wextra -Werror'"
-                echo "This is the default flags, if u have something else, just add it to the end of the line"
+                echo "This is the default flags, if u have something else, just add other flags after -W flags"
                 echo -e "${RED}Example${NC}: CFLAGS = -Wall -Wextra -Werror -g -lx11 -lbsd"
-                echo -e "If u evaluting with this script, u can just ignore this message"
+                echo -e "If u evaluting with this script, u can just check if u have -Wall -Wextra -Werror flags"
             fi
 
             if [ $requirement3 -ne 0 ]; then
@@ -161,6 +158,100 @@ function check_steps_amount()
     ./push_swap "${unique_numbers[@]}" | wc -l
 }
 
+
+
+
+
+function check_speed()
+{
+    read -p "ok, lets check how fast ur program is with 100 numbers (press enter to continue)"
+    steps=$(check_steps_amount 100)
+    echo -e "steps: $steps\n"
+    if [ $steps -lt 700 ]; then
+        echo -e "5 points\n"
+        i=5;
+    elif [ $steps -lt 900 ]; then
+        echo -e "4 points\n"
+        i=4;
+    elif [ $steps -lt 1100 ]; then
+        i=3;
+        echo -e "3 points\n"
+    elif [ $steps -lt 1300 ]; then
+        i=2;
+        echo -e "2 points\n"
+    elif [ $steps -lt 1500 ]; then
+        echo -e "1 point\n"
+        i=1;
+    else
+        echo "hahah 0 points 😈😈😈, u are too slow" 
+        i=0;
+    fi
+    read -p "ok, lets check how fast ur program is with 500 numbers (press enter to continue)"
+    steps2=$(check_steps_amount 500)
+    echo -e "steps: $steps2\n"
+    if [ $steps2 -lt 5500 ]; then
+        echo -e "5 points"
+        j=5;
+    elif [ $steps2 -lt 7000 ]; then
+        echo -e "4 points"
+        j=4;
+    elif [ $steps2 -lt 8500 ]; then
+        echo -e "3 points"
+        j=3;
+    elif [ $steps2 -lt 10000 ]; then
+        echo -e "2 points"
+        j=2;
+    elif [ $steps2 -lt 11500 ]; then
+        echo -e "1 point"
+        j=1;                
+    else
+        j=0;
+        echo "hahaha 0 points 😈😈😈, u are too slow\n"
+    fi
+    total=$((i + j))
+    if [ $total -lt 6 ]; then
+        echo -e "${RED}hahaha 😈😈😈, u are too slow\n${NC}"
+    elif [ $total -lt 10 ]; then
+        echo -e "${GREEN}ok, u passed all tests${NC}, but could u do it better? 😈😈😈\n${NC}"
+    else
+        echo -e "${GREEN}ok, u passed all tests, and u are fast 😈😈😈\n${NC}"
+    fi
+}
+
+function contains() {
+  local e match="$1"
+  shift
+  for e; do [[ "$e" == "$match" ]] && return 0; done
+  return 1
+}
+
+function check_functions() {
+    local num=$1
+    echo "ok, let's check if you have forbidden function calls 😈😈😈"
+    IGNORED_SYMBOLS=("__gmon_start__" "__libc_start_main")
+    
+    case "$num" in
+        4)
+            EXEC_NAME="push_swap"
+            ALLOWED=("read" "write" "malloc" "free" "exit")
+            ;;
+        5)
+            EXEC_NAME="philo"
+            ALLOWED=("read" "write" "malloc" "free" "exit" "gettimeofday" "printf" "memset" "usleep" "pthread_create" "pthread_detach" "pthread_join" "pthread_mutex_init" "pthread_mutex_destroy" "pthread_mutex_lock" "pthread_mutex_unlock")
+            ;;
+    esac
+    
+    RESULTS=$(nm -u $EXEC_NAME | awk '{print $2}' | sed 's/@.*$//') 
+
+    for RES in $RESULTS; do
+      if ! contains "$RES" "${ALLOWED[@]}" && ! contains "$RES" "${IGNORED_SYMBOLS[@]}"; then
+        echo -e "${RED}Forbidden function call detected: $RES ${NC}"
+        return 1
+      fi
+    done
+
+    echo -e "${GREEN}All function calls are allowed.${NC}"
+}
 
 function main {
     banner
@@ -212,72 +303,23 @@ function main {
             check_norminette;
             check_authors $num;
             check_marvin;
+            check_functions $num;
             read -p "Did u pass all tests? (y/n)" answer
             if [ "$answer" != "${answer#[Yy]}" ] ;then
-                read -p "ok, lets check how fast ur program is with 100 numbers (press enter to continue)"
-                steps=$(check_steps_amount 100)
-                echo -e "steps: $steps\n"
-                if [ $steps -lt 700 ]; then
-                    echo -e "5 points\n"
-                    i=5;
-                elif [ $steps -lt 900 ]; then
-                    echo -e "4 points\n"
-                    i=4;
-                elif [ $steps -lt 1100 ]; then
-                    i=3;
-                    echo -e "3 points\n"
-                elif [ $steps -lt 1300 ]; then
-                    i=2;
-                    echo -e "2 points\n"
-                elif [ $steps -lt 1500 ]; then
-                    echo -e "1 point\n"
-                    i=1;
-                else
-                    echo "hahah 0 points 😈😈😈, u are too slow" 
-                    i=0;
-                fi
-                read -p "ok, lets check how fast ur program is with 500 numbers (press enter to continue)"
-                steps2=$(check_steps_amount 500)
-                echo -e "steps: $steps2\n"
-                if [ $steps2 -lt 5500 ]; then
-                    echo -e "5 points"
-                    j=5;
-                elif [ $steps2 -lt 7000 ]; then
-                    echo -e "4 points"
-                    j=4;
-                elif [ $steps2 -lt 8500 ]; then
-                    echo -e "3 points"
-                    j=3;
-                elif [ $steps2 -lt 10000 ]; then
-                    echo -e "2 points"
-                    j=2;
-                elif [ $steps2 -lt 11500 ]; then
-                    echo -e "1 point"
-                    j=1;                
-                else
-                    j=0;
-                    echo "hahaha 0 points 😈😈😈, u are too slow\n"
-                fi
-                total=$((i + j))
-                if [ $total -lt 6 ]; then
-                    echo -e "${RED}hahaha 😈😈😈, u are too slow\n${NC}"
-                elif [ $total -lt 10 ]; then
-                    echo -e "${GREEN}ok, u passed all tests${NC}, but could u do it better? 😈😈😈\n${NC}"
-                else
-                    echo -e "${GREEN}ok, u passed all tests, and u are fast 😈😈😈\n${NC}"
-                fi
+                check_speed;
             else
                 echo "hahah try again 😈😈😈 maybe it will help you"
             fi
             echo "making everything clean"
             rm -f testfile;
-            make fclean >dev/null 2>&1;
+            make fclean >/dev/null 2>&1;
             echo "there will be also more tests 💀💀💀";;
         5)
-            cd philo;
+            cd philo/philo >/dev/null 2>&1 || { echo -e "${RED}I can't fail u if there is no  \"philo/philo\" folder into project's folder ${NC}"; exit 1; }
             check_authors $num;
             check_norminette;
             check_marvin;
+            check_functions $num;
             echo "there will be also more tests 💀💀💀";;
         6)
             cd minishell;
