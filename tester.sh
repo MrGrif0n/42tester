@@ -242,7 +242,39 @@ function check_functions() {
         6)
             EXEC_NAME="minishell"
             ALLOWED=("readline" "rl_clear_history" "rl_on_new_line" "rl_replace_line" "rl_redisplay" "add_history" "printf" "malloc" "free" "write" "access" "open" "read" "close" "fork" "wait" "waitpid" "wait3" "wait4" "signal" "sigaction" "sigemptyset" "sigaddset" "kill" "exit" "getcwd" "chdir" "stat" "lstat" "fstat" "unlink" "execve" "dup" "dup2" "pipe" "opendir" "readdir" "closedir" "strerror" "perror" "isatty" "ttyname" "ttyslot" "ioctl" "getenv" "tcsetattr" "tcgetattr" "tgetent" "tgetflag" "tgetnum" "tgetstr" "tgoto" "tputs")
+            ;;
+        7)
+            echo "write your executable name (example: a.out) its for that i can check forbidden functions"
+            read EXEC_NAME
+            if [ ! -f "$EXEC_NAME" ]; then
+                echo "file $EXEC_NAME does not exist"
+                exit 1
+            fi
+            echo "from the list below, choose which functions are allowed | leave empty if u dont want to check"
+            echo "4 - push_swap"
+            echo "5 - philo"
+            echo "6 - minishell"
+            read -a ALLOWED
+            ;;
     esac
+
+    if [ "$ALLOWED" -eq "$ALLOWED" ] 2>/dev/null; then
+        case "$ALLOWED" in
+            4)
+                ALLOWED=("read" "write" "malloc" "free" "exit")
+                ;;
+            5)
+                ALLOWED=("read" "write" "malloc" "free" "exit" "gettimeofday" "printf" "memset" "usleep" "pthread_create" "pthread_detach" "pthread_join" "pthread_mutex_init" "pthread_mutex_destroy" "pthread_mutex_lock" "pthread_mutex_unlock")
+                ;;
+            6)
+                ALLOWED=("readline" "rl_clear_history" "rl_on_new_line" "rl_replace_line" "rl_redisplay" "add_history" "printf" "malloc" "free" "write" "access" "open" "read" "close" "fork" "wait" "waitpid" "wait3" "wait4" "signal" "sigaction" "sigemptyset" "sigaddset" "kill" "exit" "getcwd" "chdir" "stat" "lstat" "fstat" "unlink" "execve" "dup" "dup2" "pipe" "opendir" "readdir" "closedir" "strerror" "perror" "isatty" "ttyname" "ttyslot" "ioctl" "getenv" "tcsetattr" "tcgetattr" "tgetent" "tgetflag" "tgetnum" "tgetstr" "tgoto" "tputs")
+                ;;
+            *)
+                echo "That's all what i can check, bye bye 😈😈😈"
+                exit 1
+                ;;
+        esac
+    fi
     
     RESULTS=$(nm -u $EXEC_NAME | awk '{print $2}' | sed 's/@.*$//') 
 
@@ -267,6 +299,7 @@ function main {
     echo -e "🔥4. push_swap 🧑"
     echo -e "🔥5. ${PURPLE}philosophers ${NC} 👴👴👴"
     echo -e "🔥6. ${RED}minishell ${NC} 💀"
+    echo -e "🔥7. ${GREEN}check_other_stuff ${NC} "
     read num
     cd ..
     case $num in
@@ -332,10 +365,20 @@ function main {
             ./tester;
             cd ..;
             rm -rf minishell_tester;
-            make fclean;
             check_makefile;
             check_authors $num;
             check_norminette;
+            check_marvin;
+            check_functions $num;
+            make fclean;
+            echo "there will be also more tests 💀💀💀";;
+        7)
+            echo "set up the path to the folder with your project"
+            read path
+            cd $path;
+            check_norminette;
+            check_makefile;
+            check_authors $num;
             check_marvin;
             check_functions $num;
             echo "there will be also more tests 💀💀💀";;
