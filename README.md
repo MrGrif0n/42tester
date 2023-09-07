@@ -1,13 +1,8 @@
 This tester contains a couple of tests from github and in future also my test's 
 ### How to use:
 ```
-clone it into home directory
-add alias:
-(default)
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/MrGrif0n/tester/main/install.sh)"
 
-alias gtest='~/tester/tester.sh'
-
-use gtest in youre project directory
 ```
 ## Acknowledgments
 * To [Tripouille](https://github.com/Tripouille) for [libftTester](https://github.com/Tripouille/libftTester)
