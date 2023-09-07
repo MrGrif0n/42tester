@@ -301,10 +301,10 @@ function main {
     echo -e "🔥6. ${RED}minishell ${NC} 💀"
     echo -e "🔥7. ${GREEN}check_other_stuff ${NC} "
     read num
-    cd ..
+    current_dir=$(pwd)
+    cd "$current_dir"
     case $num in
         1)
-            cd libft >/dev/null 2>&1 || cd 00_libft >/dev/null 2>&1 || { echo -e "${RED}I can't fail u if there is no  \"libft\" or \"00_libft\" folder into project's folder ${NC}"; exit 1; }
             git clone https://github.com/Tripouille/libftTester.git >/dev/null 2>&1; 
             cd libftTester;
             make;
@@ -317,20 +317,17 @@ function main {
             make fclean;;
         2)
             project="ft_printf"
-            cd ft_printf >/dev/null 2>&1 || cd 00_ft_printf >/dev/null 2>&1 || { echo -e "${RED}I can't fail u if there is no  \"printf\" or \"00_printf\" folder into project's folder ${NC}"; exit 1; }
             make re;
             check_file;
             check_norminette;
             check_authors $num ;;
         3)
             project="get_next_line"
-            cd get_next_line >/dev/null 2>&1 || cd 00_get_next_line >/dev/null 2>&1 || { echo -e "${RED}I can't fail u if there is no  \"get_next_line\" or \"00_get_next_line\" folder into project's folder ${NC}"; exit 1; }
             check_norminette;
             francinette --strict;
             check_authors $num ;
             echo "there will be also more tests";;
         4)
-            cd push_swap >/dev/null 2>&1 || { echo -e "${RED}I can't fail u if there is no  \"push_swap\" folder into project's folder ${NC}"; exit 1; }
             make re;
             curl https://raw.githubusercontent.com/hu8813/tester_push_swap/main/pstester.py | python3 -
             read -p "Press enter to continue or ctrl + c to exit"
@@ -351,15 +348,14 @@ function main {
             make fclean >/dev/null 2>&1;
             echo "there will be also more tests 💀💀💀";;
         5)
-            cd philo/philo >/dev/null 2>&1 || { echo -e "${RED}I can't fail u if there is no  \"philo/philo\" folder into project's folder ${NC}"; exit 1; }
+            make;
             check_authors $num;
             check_norminette;
             check_marvin;
             check_functions $num;
             echo "there will be also more tests 💀💀💀";;
         6)
-            cd minishell;
-            make re;
+            make;
             git clone https://github.com/LucasKuhn/minishell_tester.git >/dev/null 2>&1;
             cd minishell_tester;
             ./tester;
@@ -370,12 +366,9 @@ function main {
             check_norminette;
             check_marvin;
             check_functions $num;
-            make fclean;
+            #make fclean;
             echo "there will be also more tests 💀💀💀";;
         7)
-            echo "set up the path to the folder with your project"
-            read path
-            cd $path;
             check_norminette;
             check_makefile;
             check_authors $num;
