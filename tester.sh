@@ -159,8 +159,49 @@ function check_steps_amount()
 }
 
 
+check_non_whitelisted_files() {
+    local dir=$(pwd)
+    echo "Checking directory: $dir"
 
+    if [ ! -d "$dir" ]; then
+        echo "Directory $dir doesn't exist!"
+        return 1
+    fi
 
+    local whitelisted_extensions=(".c" ".h")
+    local whitelisted_files=("Makefile")
+    local find_cmd="find '$dir' -type f ! -path '$dir/.git/*'"
+
+    for ext in "${whitelisted_extensions[@]}"; do
+        find_cmd="$find_cmd ! -name '*$ext'"
+    done
+
+    for file in "${whitelisted_files[@]}"; do
+        find_cmd="$find_cmd ! -name '$file'"
+    done
+
+    non_whitelisted_files=$(eval $find_cmd)
+    non_whitelisted_files=$(echo "$non_whitelisted_files" | while read -r file; do
+        if [ -d "$dir/.git" ] || [ -f "$dir/.gitignore" ]; then
+            if [[ "$file" == *"/.gitignore" ]]; then
+                if ! grep -q "^\.gitignore$" "$file" && ! git check-ignore -q "$file"; then
+                    echo "$file"
+                fi
+            elif ! git check-ignore -q "$file"; then
+                echo "$file"
+            fi
+        else
+            echo "$file"
+        fi
+    done)
+
+    if [ -z "$non_whitelisted_files" ]; then
+        echo -e "${GREEN} all files are allowed in $dir. ${NC}"
+    else
+        echo "Hahaha u have not allowed files in $dir 😈😈😈"
+        echo "$non_whitelisted_files"
+    fi
+}
 
 function check_speed()
 {
@@ -309,31 +350,35 @@ function main {
             cd libftTester;
             make;
             cd .. && rm -rf libftTester;
+            check_norminette;
             check_makefile;
             check_file $num;
-            check_norminette;
             check_authors $num ;
             check_marvin;
+            check_non_whitelisted_files;
             make fclean;;
         2)
             project="ft_printf"
             make re;
             check_file;
             check_norminette;
+            check_marvin;
+            check_non_whitelisted_files;
             check_authors $num ;;
         3)
             project="get_next_line"
-            check_norminette;
             francinette --strict;
+            check_norminette;
             check_authors $num ;
+            check_marvin;
             echo "there will be also more tests";;
         4)
             make re;
             curl https://raw.githubusercontent.com/hu8813/tester_push_swap/main/pstester.py | python3 -
             read -p "Press enter to continue or ctrl + c to exit"
             bash -c "$(curl -fsSL https://raw.githubusercontent.com/RubenPin90/push_swap_tester/master/tester.sh)" 
-            check_makefile;
             check_norminette;
+            check_makefile;
             check_authors $num;
             check_marvin;
             check_functions $num;
@@ -349,10 +394,11 @@ function main {
             echo "there will be also more tests 💀💀💀";;
         5)
             make;
-            check_authors $num;
             check_norminette;
+            check_authors $num;
             check_marvin;
             check_functions $num;
+            check_non_whitelisted_files;
             echo "there will be also more tests 💀💀💀";;
         6)
             make;
@@ -361,12 +407,12 @@ function main {
             ./tester;
             cd ..;
             rm -rf minishell_tester;
+            check_norminette;
             check_makefile;
             check_authors $num;
-            check_norminette;
             check_marvin;
             check_functions $num;
-            #make fclean;
+            check_non_whitelisted_files;
             echo "there will be also more tests 💀💀💀";;
         7)
             check_norminette;
