@@ -1,9 +1,17 @@
 This tester contains a couple of tests from github and in future also my test's 
-### How to use:
+### How to Install:
 ```
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/MrGrif0n/tester/main/install.sh)"
 
 ```
+### How to use:
+```
+cd project_directory
+
+gtest 
+
+```
+
 ## Acknowledgments
 * To [Tripouille](https://github.com/Tripouille) for [libftTester](https://github.com/Tripouille/libftTester)
 * To [Francisco](https://github.com/xicodomingues) for [francinette](https://github.com/xicodomingues/francinette)
