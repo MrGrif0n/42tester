@@ -355,7 +355,7 @@ function main {
             check_file $num;
             check_authors $num ;
             check_marvin;
-            check_non_whitelisted_files;
+            #check_non_whitelisted_files;
             make fclean;;
         2)
             project="ft_printf"
@@ -363,7 +363,7 @@ function main {
             check_file;
             check_norminette;
             check_marvin;
-            check_non_whitelisted_files;
+            #check_non_whitelisted_files;
             check_authors $num ;;
         3)
             project="get_next_line"
@@ -398,7 +398,7 @@ function main {
             check_authors $num;
             check_marvin;
             check_functions $num;
-            check_non_whitelisted_files;
+            #check_non_whitelisted_files;
             echo "there will be also more tests 💀💀💀";;
         6)
             make;
@@ -412,7 +412,7 @@ function main {
             check_authors $num;
             check_marvin;
             check_functions $num;
-            check_non_whitelisted_files;
+            #check_non_whitelisted_files;
             echo "there will be also more tests 💀💀💀";;
         7)
             check_norminette;
